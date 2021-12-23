@@ -3,7 +3,6 @@ package gmoon
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gmoon/views/funs"
 	"go.uber.org/zap"
 	"log"
 )
@@ -36,7 +35,7 @@ func Ignite() *GMoon { //这就是所谓的构造函数，ignite有 发射、燃
 	g.Use(ErrorHandler())         //强迫加载的异常处理中间件
 	g.beanFactory.setBean(config) //整个配置加载进bean中
 	if config.Server.Html != "" {
-		g.FuncMap = funs.FuncMap
+		// g.FuncMap = funs.FuncMap
 		//g.LoadHTMLGlob(config.Server.Html)
 	}
 	return g
