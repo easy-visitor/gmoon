@@ -26,7 +26,8 @@ func init() {
 	Logger = logger
 }
 
-func Ignite() *GMoon { //这就是所谓的构造函数，ignite有 发射、燃烧， 很有激情。符合我们骚动的心情
+//初始化
+func Ignite() *GMoon {
 	g := &GMoon{
 		Engine:      gin.New(),
 		beanFactory: NewBeanFactory(),
@@ -36,31 +37,27 @@ func Ignite() *GMoon { //这就是所谓的构造函数，ignite有 发射、燃
 	g.beanFactory.setBean(config) //整个配置加载进bean中
 	if config.Server.Html != "" {
 		// g.FuncMap = funs.FuncMap
-		//g.LoadHTMLGlob(config.Server.Html)
+		g.LoadHTMLGlob(config.Server.Html)
 	}
 	return g
 }
 
-//func (this *GMoon) Handle(httpMethod, relativePath string, handlers ...gin.HandlerFunc) *GMoon {
+//实现路由
 func (this *GMoon) Handle(httpMethod, relativePath string, handler interface{}) *GMoon {
-
+	Logger.Info(httpMethod,)
 	if h := Convert(handler); h != nil {
 		this.g.Handle(httpMethod, relativePath, h)
 	}
-	/*if h, ok := handlers.(func(ctx *gin.Context) string); ok {
-		this.g.Handle(httpMethod, relativePath, func(context *gin.Context) {
-			context.String(200, h(context))
-		})
-	}*/
 	return this
 }
+
+//启动
 func (this *GMoon) Launch() { //启动函数
 	var port = 8080
 	if config := this.beanFactory.GetBean(new(SysConfig)); config != nil {
 		port = config.(*SysConfig).Server.Port
 	}
 	getCronTask().Start()
-	Logger.Info("start success")
 	this.Run(fmt.Sprintf(":%d", port))
 
 }
@@ -69,12 +66,14 @@ func (this *GMoon) Launch() { //启动函数
 func (this *GMoon) Beans(beans ...Bean) *GMoon {
 
 	for _, bean := range beans {
+		fmt.Println(bean)
 		this.exprData[bean.Name()] = bean
 	}
 	this.beanFactory.setBean(beans...)
 	return this
 }
 
+//注册中间件
 func (this *GMoon) Attach(f Fairing) *GMoon {
 	this.Use(func(context *gin.Context) {
 		err := f.OnRequest(context)
@@ -108,6 +107,7 @@ func (this *GMoon) Task(cron string, expr interface{}) *GMoon {
 	return this
 }
 
+//挂载控制器与路由
 func (this *GMoon) Mount(group string, classes ...IClass) *GMoon {
 	this.g = this.Group(group)
 	for _, class := range classes {

@@ -17,12 +17,13 @@ func init() {
 }
 
 func Convert(handler interface{}) gin.HandlerFunc {
-	h_ref := reflect.ValueOf(handler)
+	hRef := reflect.ValueOf(handler)
+
 	for _, r := range ResponderList {
-		r_ref := reflect.ValueOf(r).Elem()
-		if h_ref.Type().ConvertibleTo(r_ref.Type()) {
-			r_ref.Set(h_ref)
-			return r_ref.Interface().(Responder).RespondTo()
+		rRef := reflect.ValueOf(r).Elem()
+		if hRef.Type().ConvertibleTo(rRef.Type()) {
+			rRef.Set(hRef)
+			return rRef.Interface().(Responder).RespondTo()
 		}
 	}
 	return nil
