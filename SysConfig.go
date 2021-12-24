@@ -11,16 +11,7 @@ type ServerConfig struct {
 	Html string `yaml:"html"`
 }
 
-/**
-level: 'info'
-  format: 'console'
-  prefix: 'g_moon'
-  director: 'log'
-  show-line: true
-  encode-level: 'LowercaseColorLevelEncoder'
-  stacktrace-key: 'stacktrace'
-  log-in-console: true
-*/
+
 type ZapConfig struct {
 	level         string `yaml:"level"`
 	Format        string `yaml:"format"`
