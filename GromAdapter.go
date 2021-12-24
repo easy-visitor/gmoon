@@ -14,7 +14,7 @@ type GromAdapter struct {
 }
 
 func dns() string {
-	return config.Mysql.Username + ":" + config.Mysql.Password + "@tcp(" + config.Mysql.Path + ":" + config.Mysql.Port + ")/" + config.Mysql.Dbname + "?" + config.Mysql.Config
+	return globalConfig.Mysql.Username + ":" + globalConfig.Mysql.Password + "@tcp(" + globalConfig.Mysql.Path + ":" + globalConfig.Mysql.Port + ")/" + globalConfig.Mysql.Dbname + "?" + globalConfig.Mysql.Config
 }
 
 func NewGromAdapter() *GromAdapter {
@@ -32,8 +32,8 @@ func NewGromAdapter() *GromAdapter {
 		log.Fatal(err)
 	}
 	sqlDB, _ := db.DB()
-	sqlDB.SetMaxIdleConns(config.Mysql.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(config.Mysql.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(globalConfig.Mysql.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(globalConfig.Mysql.MaxOpenConns)
 	return &GromAdapter{
 		DB: db,
 	}
@@ -56,7 +56,7 @@ func dbConfig() *gorm.Config {
 		Colorful:      true,
 	})
 
-	switch config.Mysql.LogMode {
+	switch globalConfig.Mysql.LogMode {
 	case "silent", "Silent":
 		gormConfig.Logger = _default.LogMode(logger.Silent)
 	case "error", "Error":

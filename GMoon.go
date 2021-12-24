@@ -18,11 +18,12 @@ type GMoon struct {
 	exprData map[string]interface{}
 }
 
-var config = &SysConfig{}
+//全局配置文件
+var globalConfig = &SysConfig{}
 
 func init() {
-	config = InitConfig()
-	logger := NewZapLogger(config.Zap).Logger()
+	globalConfig = InitConfig()
+	logger := NewZapLogger(globalConfig.Zap).Logger()
 	Logger = logger
 }
 
@@ -33,18 +34,18 @@ func Ignite() *GMoon {
 		beanFactory: NewBeanFactory(),
 		exprData:    map[string]interface{}{},
 	}
-	g.Use(ErrorHandler())         //强迫加载的异常处理中间件
-	g.beanFactory.setBean(config) //整个配置加载进bean中
-	if config.Server.Html != "" {
+	g.Use(ErrorHandler())               //强迫加载的异常处理中间件
+	g.beanFactory.setBean(globalConfig) //整个配置加载进bean中
+	if globalConfig.Server.Html != "" {
 		// g.FuncMap = funs.FuncMap
-		g.LoadHTMLGlob(config.Server.Html)
+		g.LoadHTMLGlob(globalConfig.Server.Html)
 	}
 	return g
 }
 
 //实现路由
 func (this *GMoon) Handle(httpMethod, relativePath string, handler interface{}) *GMoon {
-	Logger.Info(httpMethod,)
+	Logger.Info(httpMethod)
 	if h := Convert(handler); h != nil {
 		this.g.Handle(httpMethod, relativePath, h)
 	}

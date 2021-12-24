@@ -13,7 +13,7 @@ type ServerConfig struct {
 type Mysql struct {
 	Path         string `yaml:"path"`           // 服务器地址
 	Port         string `yaml:"port"`           // 端口
-	Config       string `yaml:"config"`         // 高级配置
+	Config       string `yaml:"globalConfig"`         // 高级配置
 	Dbname       string `yaml:"db-name"`        // 数据库名
 	Username     string `yaml:"username"`       // 数据库用户名
 	Password     string `yaml:"password"`       // 数据库密码
@@ -40,6 +40,11 @@ type Redis struct {
 	Password string `yaml:"password"` // 密码
 }
 
+type Jaeger struct {
+	ServiceName       string    `yaml:"serve-name"`       // redis的哪个数据库
+	LocalAgentHostPort     string `yaml:"local-agent-host-port"`     // 服务器地址:端口
+}
+
 type UserConfig map[interface{}]interface{}
 
 //递归读取用户配置文件
@@ -62,6 +67,7 @@ type SysConfig struct {
 	Server ServerConfig
 	Mysql  Mysql
 	Redis  Redis
+	Jaeger Jaeger
 	Zap    ZapConfig
 	Config UserConfig
 }

@@ -17,7 +17,7 @@ func (r RedisAdapter) Name() string {
 
 func NewRedisAdapter() *RedisAdapter {
 
-	redisCfg := config.Redis
+	redisCfg := globalConfig.Redis
 	client := redis.NewClient(&redis.Options{
 		Addr:     redisCfg.Addr,
 		Password: redisCfg.Password, // no password set
