@@ -8,6 +8,7 @@ import (
 type ServerConfig struct {
 	Port int    `yaml:"port"`
 	Name string `yaml:"name"`
+	ReleaseMode string `yaml:"release-mode"`
 	Html string `yaml:"html"`
 }
 type Mysql struct {
@@ -77,6 +78,7 @@ func NewSysConfig() *SysConfig {
 		Server: ServerConfig{
 			Port: 8080,
 			Name: "myweb",
+			ReleaseMode: "debug",
 		},
 		Zap: ZapConfig{
 			level:         "info",

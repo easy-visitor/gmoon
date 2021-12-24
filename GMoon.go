@@ -34,6 +34,9 @@ func Ignite() *GMoon {
 		beanFactory: NewBeanFactory(),
 		exprData:    map[string]interface{}{},
 	}
+
+	//gin.SetMode(gin.ReleaseMode)
+
 	g.Use(ErrorHandler())               //强迫加载的异常处理中间件
 	g.beanFactory.setBean(globalConfig) //整个配置加载进bean中
 	if globalConfig.Server.Html != "" {
@@ -45,7 +48,6 @@ func Ignite() *GMoon {
 
 //实现路由
 func (this *GMoon) Handle(httpMethod, relativePath string, handler interface{}) *GMoon {
-	Logger.Info(httpMethod)
 	if h := Convert(handler); h != nil {
 		this.g.Handle(httpMethod, relativePath, h)
 	}

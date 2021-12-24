@@ -13,12 +13,11 @@ var ResponderList []Responder
 
 func init() {
 
-	ResponderList = []Responder{new(StringResponder), new(ModelResponder), new(ModelsResponder), new(ViewResponder)}
+	ResponderList = []Responder{new(StringResponder), new(ModelResponder), new(ModelsResponder), new(ViewResponder),new(JsonResponder)}
 }
 
 func Convert(handler interface{}) gin.HandlerFunc {
 	hRef := reflect.ValueOf(handler)
-
 	for _, r := range ResponderList {
 		rRef := reflect.ValueOf(r).Elem()
 		if hRef.Type().ConvertibleTo(rRef.Type()) {
@@ -34,6 +33,15 @@ type StringResponder func(ctx *gin.Context) string
 func (this StringResponder) RespondTo() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.String(200, this(context))
+	}
+}
+
+type Json interface{}
+type JsonResponder func(*gin.Context) Json
+
+func (this JsonResponder) RespondTo() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.JSON(200, this(context))
 	}
 }
 
