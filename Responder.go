@@ -13,7 +13,13 @@ var ResponderList []Responder
 
 func init() {
 
-	ResponderList = []Responder{new(StringResponder), new(ModelResponder), new(ModelsResponder), new(ViewResponder),new(JsonResponder)}
+	ResponderList = []Responder{
+		new(StringResponder),
+		new(ModelResponder),
+		new(ModelsResponder),
+		new(ViewResponder),
+		new(JsonResponder),
+		new(SuccessResponder)}
 }
 
 func Convert(handler interface{}) gin.HandlerFunc {
@@ -40,6 +46,21 @@ type Json interface{}
 type JsonResponder func(*gin.Context) Json
 
 func (this JsonResponder) RespondTo() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.JSON(200, this(context))
+	}
+}
+
+//type RespondSuccess
+type Success struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data"`
+	Msg  string      `json:"msg"`
+}
+
+type SuccessResponder func(*gin.Context) Success
+
+func (this SuccessResponder) RespondTo() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.JSON(200, this(context))
 	}
